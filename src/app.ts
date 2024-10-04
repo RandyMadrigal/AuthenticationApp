@@ -3,6 +3,7 @@ import userRoutes from "./routes/users.routes.ts";
 import authenticationRoutes from "./routes/authentication.routes.ts";
 
 const app: Application = express();
+app.use(express.json());
 
 app.use("/api", userRoutes);
 app.use("/api", authenticationRoutes);
