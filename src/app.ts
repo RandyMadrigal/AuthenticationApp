@@ -1,8 +1,16 @@
-import express from "express";
-import { PORT } from "./config.ts";
+import express, { Application, Request, Response } from "express";
+import userRoutes from "./routes/users.routes.ts";
+import authenticationRoutes from "./routes/authentication.routes.ts";
 
-const app = express();
+const app: Application = express();
 
-app.listen(PORT, () => {
-  console.log(`SERVER ON PORT ${PORT}....`);
+app.use("/api", userRoutes);
+app.use("/api", authenticationRoutes);
+
+app.use("/", (req: Request, res: Response) => {
+  res.status(404).send("bad request");
+});
+
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`SERVER ON PORT ${process.env.PORT || 8080} ....`);
 });
