@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import morgan from "morgan";
-import userRoutes from "./routes/users.routes.ts";
+import userRoutes from "./routes/user.routes.ts";
 import authenticationRoutes from "./routes/authentication.routes.ts";
 
 const app: Application = express();

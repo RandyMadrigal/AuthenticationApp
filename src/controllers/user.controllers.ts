@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
+import * as userService from "../services/user.services";
 
 import { pool } from "../db";
 import { IUSER } from "../utils/interface";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const { rows } = await pool.query<IUSER>("SELECT * FROM users");
-    res.status(200).json(rows);
-    console.log(rows);
+    const users = await userService.getAllUser();
+    res.status(200).json(users);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" }); // Manejo del error
@@ -17,18 +17,13 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const { rows } = await pool.query<IUSER>(
-      "SELECT * FROM users WHERE id = $1",
-      [id]
-    );
+    const user = await userService.getUserById(id);
 
-    if (rows.length === 0) {
+    if (!user) {
       res.status(404).json({ message: "user not found" });
       return;
     }
-
-    res.status(200).json(rows);
-    console.log(rows);
+    res.status(200).json(user);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" }); // Manejo del error
@@ -36,15 +31,12 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { name, email } = req.body;
+  const userData = req.body;
 
   try {
-    const result = await pool.query<IUSER>(
-      "INSERT INTO users (name,email) VALUES ($1, $2)",
-      [name, email]
-    );
-    res.status(201).json({ message: "User created" });
+    const result = await userService.createUser(userData);
     console.log(result);
+    res.status(201).json({ message: "User created" });
   } catch (err) {
     console.log(err);
     if (err.code === "23505") {
@@ -58,10 +50,7 @@ export const createUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const { rowCount } = await pool.query<IUSER>(
-      "DELETE FROM users WHERE id = $1",
-      [id]
-    );
+    const rowCount = await userService.deleteUser(id);
 
     if (rowCount === 0) {
       res.status(404).json({ message: "user not found" });
