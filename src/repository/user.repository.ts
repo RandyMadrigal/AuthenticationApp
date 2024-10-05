@@ -14,12 +14,12 @@ export const findUserById = async (id: string): Promise<IUSER | null> => {
   return rows[0] || null;
 };
 
-export const insertUser = async (userData: IUSER) => {
+export const insertUser = async (userData: IUSER, password: string) => {
   const { name, email } = userData;
 
   const result = await pool.query<IUSER>(
-    "INSERT INTO users (name,email) VALUES ($1, $2)",
-    [name, email]
+    "INSERT INTO users (name,email,password) VALUES ($1, $2, $3)",
+    [name, email, password]
   );
 
   return result;

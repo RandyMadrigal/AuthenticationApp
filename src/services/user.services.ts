@@ -1,5 +1,6 @@
 import * as userRepository from "../repository/user.repository";
 import { IUSER } from "../utils/interface";
+import { hashPassword } from "../utils/bcrypt";
 
 export const getAllUser = async () => {
   return await userRepository.findUsers();
@@ -10,7 +11,10 @@ export const getUserById = async (id: string) => {
 };
 
 export const createUser = async (userData: IUSER) => {
-  return await userRepository.insertUser(userData);
+  const { password } = userData;
+  const hash = await hashPassword(password);
+
+  return await userRepository.insertUser(userData, hash);
 };
 
 export const deleteUser = async (id: string) => {

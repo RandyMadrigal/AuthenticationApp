@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import * as userService from "../services/user.services";
 
-import { pool } from "../db";
-import { IUSER } from "../utils/interface";
-
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const users = await userService.getAllUser();
@@ -35,7 +32,6 @@ export const createUser = async (req: Request, res: Response) => {
 
   try {
     const result = await userService.createUser(userData);
-    console.log(result);
     res.status(201).json({ message: "User created" });
   } catch (err) {
     console.log(err);
@@ -51,12 +47,14 @@ export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const rowCount = await userService.deleteUser(id);
+    console.log(rowCount);
 
-    if (rowCount === 0) {
-      res.status(404).json({ message: "user not found" });
+    if (rowCount) {
+      res.status(200).json({ message: "User deleted" });
       return;
     }
-    res.status(200).json({ message: "User deleted" });
+
+    res.status(404).json({ message: "user not found" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Server error" }); // Manejo del error
