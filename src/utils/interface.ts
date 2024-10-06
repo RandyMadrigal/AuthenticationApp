@@ -5,3 +5,8 @@ export interface IUSER {
   password: string;
   created_at: string;
 }
+
+export interface IAUTH {
+  email: string;
+  password: string;
+}

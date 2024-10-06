@@ -3,20 +3,35 @@ import { IUSER } from "../utils/interface";
 import { hashPassword } from "../utils/bcrypt";
 
 export const getAllUser = async () => {
-  return await userRepository.findUsers();
+  try {
+    return await userRepository.findUsers();
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getUserById = async (id: string) => {
-  return await userRepository.findUserById(id);
+  try {
+    return await userRepository.findUserById(id);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const createUser = async (userData: IUSER) => {
-  const { password } = userData;
-  const hash = await hashPassword(password);
-
-  return await userRepository.insertUser(userData, hash);
+  try {
+    const result = await userRepository.insertUser(userData);
+    return result;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const deleteUser = async (id: string) => {
-  return await userRepository.deleteUser(id);
+  try {
+    const result = await userRepository.deleteUser(id);
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
 };
