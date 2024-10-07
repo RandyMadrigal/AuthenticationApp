@@ -20,7 +20,10 @@ export const getUserById = async (id: string) => {
 
 export const createUser = async (userData: IUSER) => {
   try {
-    const result = await userRepository.insertUser(userData);
+    const { password, ...data } = userData;
+    const encryptPassword = await hashPassword(password);
+    const newUser = { ...data, password: encryptPassword };
+    const result = await userRepository.insertUser(newUser);
     return result;
   } catch (err) {
     throw err;
