@@ -2,6 +2,8 @@ import * as userRepository from "../repository/user.repository";
 import { IUSER } from "../utils/interface";
 import { hashPassword } from "../utils/bcrypt";
 
+//TODO handle errors
+
 export const getAllUser = async () => {
   try {
     return await userRepository.findUsers();
@@ -21,9 +23,20 @@ export const getUserById = async (id: string) => {
 export const createUser = async (userData: IUSER) => {
   try {
     const { password, ...data } = userData;
+
+    //verify if email already exists
+    const user = await userRepository.findByEmail(userData.email);
+    if (user) throw new Error("User with email already exists");
+
+    //encryptPassword
     const encryptPassword = await hashPassword(password);
+
+    //create a new user with encryptpassword
     const newUser = { ...data, password: encryptPassword };
+
+    //insert User
     const result = await userRepository.insertUser(newUser);
+
     return result;
   } catch (err) {
     throw err;

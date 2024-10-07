@@ -37,12 +37,17 @@ export const createUser = async (req: Request, res: Response) => {
 
   try {
     const result = await userService.createUser(userData);
-    res.status(201).json({ message: "User created" });
+    if (result) {
+      res.status(201).json({ message: "User created" });
+    }
   } catch (err) {
-    if (err?.code === "23505") {
+    console.log(err.message);
+
+    if (err?.message === "User with email already exists") {
       res.status(409).json({ error: "User with email already exists" });
       return;
     }
+
     res.status(500).json({ message: "Server error" }); // Manejo del error
   }
 };

@@ -36,3 +36,11 @@ export const deleteUser = async (id: string): Promise<number | null> => {
   );
   return rowCount;
 };
+
+export const findByEmail = async (email: string): Promise<QueryResult> => {
+  const { rows } = await pool.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+
+  return rows[0];
+};
