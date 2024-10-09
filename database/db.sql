@@ -6,9 +6,3 @@ CREATE TABLE users(
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-/*
-INSERT INTO users (name, email) VALUES ('John Doe','John@gmail.com'),('Maria Doe','Maria@gmail.com');
-*/
-
-SELECT * FROM users;
-
